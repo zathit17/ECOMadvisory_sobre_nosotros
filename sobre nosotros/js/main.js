@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavigation();
   initScrollEffects();
   initCounters();
-  initTeamCards();
+  initMemberToggles();  // bio expand/collapse en tarjetas del equipo
   initContactForm();
   initHeroParallax();   // blobs con parallax de mouse
   initHeroCanvas();     // partículas con líneas en canvas
@@ -139,32 +139,27 @@ function initCounters() {
   startCounting(); // check on load
 }
 
-// ===== TEAM CARDS =====
-function initTeamCards() {
-  const grid = document.querySelector(".team__grid");
-  if (!grid) return;
+// ===== MEMBER BIO TOGGLES =====
+function initMemberToggles() {
+  const toggles = document.querySelectorAll(".member-card__toggle");
+  toggles.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.dataset.target;
+      const extra = document.getElementById(targetId);
+      if (!extra) return;
 
-  teamMembers.forEach((member, i) => {
-    const delay = i * 100;
-    const card = document.createElement("div");
-    card.className = "team-card";
-    card.setAttribute("data-aos", "fade-up");
-    card.setAttribute("data-aos-delay", delay.toString());
-    card.innerHTML = `
-      <div class="team-card__photo-placeholder">
-        <i class="${member.icon}"></i>
-      </div>
-      <div class="team-card__body">
-        <p class="team-card__name">${member.name}</p>
-        <p class="team-card__role">${member.role}</p>
-        <p class="team-card__bio">${member.bio}</p>
-        <div class="team-card__social">
-          <a href="${member.linkedin}" aria-label="LinkedIn de ${member.name}"><i class="fab fa-linkedin-in"></i></a>
-          <a href="${member.twitter}" aria-label="Twitter de ${member.name}"><i class="fab fa-twitter"></i></a>
-        </div>
-      </div>
-    `;
-    grid.appendChild(card);
+      const isExpanded = btn.getAttribute("aria-expanded") === "true";
+
+      if (isExpanded) {
+        extra.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+        btn.querySelector(".toggle-label").textContent = "Ver más";
+      } else {
+        extra.hidden = false;
+        btn.setAttribute("aria-expanded", "true");
+        btn.querySelector(".toggle-label").textContent = "Ver menos";
+      }
+    });
   });
 }
 
