@@ -623,6 +623,82 @@ button {
   margin-top: 0.4rem;
 }
 
+/* ===== FILOSOFÍA ===== */
+.philosophy {
+  padding: 7rem 0;
+  background: var(--white);
+  border-top: 1px solid var(--clr-border);
+}
+
+.philosophy__inner {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+/* Columna izquierda: título + línea decorativa */
+.philosophy__heading {
+  position: sticky;
+  top: 7rem;
+}
+
+.philosophy__title {
+  font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--primary);
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.philosophy__divider {
+  width: 48px;
+  height: 4px;
+  background: var(--tertiary);
+  border-radius: 2px;
+}
+
+/* Columna derecha: párrafos */
+.philosophy__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.philosophy__body p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--dark);
+}
+
+.philosophy__lead {
+  font-size: 1.2rem !important;
+  font-weight: 500;
+  color: var(--primary) !important;
+  line-height: 1.6 !important;
+}
+
+/* Cita destacada */
+.philosophy__quote {
+  position: relative;
+  margin: 0.5rem 0;
+  padding: 1.2rem 1.5rem 1.2rem 2rem;
+  background: rgba(98, 191, 221, 0.07);
+  border-left: 4px solid var(--tertiary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--primary);
+  line-height: 1.5;
+}
+
 /* ===== ABOUT ===== */
 .about {
   padding: 7rem 0;
@@ -1256,6 +1332,16 @@ button {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  /* Filosofía */
+  .philosophy__inner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .philosophy__heading {
+    position: static;
+  }
+
   /* Footer */
   .footer__inner {
     grid-template-columns: 1fr 1fr;
@@ -1339,6 +1425,19 @@ button {
 
   .hero__tag {
     margin-inline: auto;
+  }
+
+  /* === FILOSOFÍA === */
+  .philosophy {
+    padding: 4rem 0;
+  }
+
+  .philosophy__title {
+    font-size: 2rem;
+  }
+
+  .philosophy__body p {
+    font-size: 1rem;
   }
 
   /* === SECCIONES GENERALES === */
