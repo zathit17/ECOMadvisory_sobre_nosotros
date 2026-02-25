@@ -1747,15 +1747,8 @@ button {
     position: static;
   }
 
-  /* Footer */
-  .footer__inner {
-    grid-template-columns: 1fr 1fr;
-    gap: 2.5rem;
-  }
+  /* Footer — flex column centrado por defecto, no requiere overrides en este breakpoint */
 
-  .footer__brand {
-    grid-column: 1 / -1;
-  }
 }
 
 /* ---- 768px ---- */

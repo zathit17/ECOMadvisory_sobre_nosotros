@@ -43,7 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initCounters();
   initMemberToggles();  // bio expand/collapse en tarjetas del equipo
   initContactForm();
-  initHeroParallax();   // blobs con parallax de mouse
+  initHeroParallax();   // blobs hero con parallax de mouse
+  initFooterParallax(); // blobs footer reactivos al mouse
   initHeroCanvas();     // partículas con líneas en canvas
   initBackToTop();
   initAOS();
@@ -240,6 +241,39 @@ function initHeroParallax() {
     currentY = lerp(currentY, targetY, 0.06);
     // Mover todo el fondo: los blobs mantienen sus keyframes CSS sin conflicto
     bg.style.transform = `translate(${currentX * STRENGTH}px, ${currentY * STRENGTH}px)`;
+    requestAnimationFrame(animate);
+  })();
+}
+
+// ===== FOOTER PARALLAX (blobs reactivos al mouse) =====
+function initFooterParallax() {
+  const footer = document.getElementById("footer-main");
+  const blob1 = document.querySelector(".footer__blob--1");
+  const blob2 = document.querySelector(".footer__blob--2");
+  const blob3 = document.querySelector(".footer__blob--3");
+  if (!footer || !blob1 || !blob2 || !blob3) return;
+
+  let tx = 0, ty = 0;
+  let cx = 0, cy = 0;
+  const S1 = 22, S2 = 16, S3 = 10; // strength por blob
+
+  footer.addEventListener("mousemove", (e) => {
+    const rect = footer.getBoundingClientRect();
+    tx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    ty = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+  });
+
+  footer.addEventListener("mouseleave", () => { tx = 0; ty = 0; });
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  (function animate() {
+    cx = lerp(cx, tx, 0.05);
+    cy = lerp(cy, ty, 0.05);
+    // Cada blob se mueve en distinta dirección → efecto de profundidad
+    blob1.style.transform = `translate(${-cx * S1}px, ${-cy * S1}px)`;
+    blob2.style.transform = `translate(${cx * S2}px, ${cy * S2}px)`;
+    blob3.style.transform = `translateX(-50%) translate(${cx * S3}px, ${cy * S3}px)`;
     requestAnimationFrame(animate);
   })();
 }
