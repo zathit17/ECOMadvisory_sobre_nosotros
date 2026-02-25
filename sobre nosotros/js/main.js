@@ -43,7 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initCounters();
   initTeamCards();
   initContactForm();
-  initParticles();
+  initHeroParallax();   // blobs con parallax de mouse
+  initHeroCanvas();     // partículas con líneas en canvas
   initBackToTop();
   initAOS();
 });
@@ -219,43 +220,127 @@ function initContactForm() {
   });
 }
 
-// ===== PARTICLES =====
-function initParticles() {
-  const container = document.getElementById("particles");
-  if (!container) return;
-  const count = 30;
-  for (let i = 0; i < count; i++) {
-    const dot = document.createElement("span");
-    const size = Math.random() * 3 + 1;
-    const x = Math.random() * 100;
-    const y = Math.random() * 100;
-    const delay = Math.random() * 6;
-    const duration = Math.random() * 8 + 6;
-    Object.assign(dot.style, {
-      position: "absolute",
-      left: `${x}%`,
-      top: `${y}%`,
-      width: `${size}px`,
-      height: `${size}px`,
-      borderRadius: "50%",
-      background: `rgba(79, 158, 255, ${Math.random() * 0.4 + 0.1})`,
-      animation: `floatParticle ${duration}s ${delay}s ease-in-out infinite alternate`,
-      pointerEvents: "none",
+// ===== HERO PARALLAX (mouse interaction sobre los blobs del fondo) =====
+function initHeroParallax() {
+  const hero = document.getElementById("quienes-somos");
+  const bg = hero ? hero.querySelector(".hero__bg") : null;
+  if (!hero || !bg) return;
+
+  let targetX = 0, targetY = 0;
+  let currentX = 0, currentY = 0;
+  const STRENGTH = 18; // px máximo de desplazamiento
+
+  hero.addEventListener("mousemove", (e) => {
+    const rect = hero.getBoundingClientRect();
+    targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+  });
+
+  hero.addEventListener("mouseleave", () => { targetX = 0; targetY = 0; });
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  (function animate() {
+    currentX = lerp(currentX, targetX, 0.06);
+    currentY = lerp(currentY, targetY, 0.06);
+    // Mover todo el fondo: los blobs mantienen sus keyframes CSS sin conflicto
+    bg.style.transform = `translate(${currentX * STRENGTH}px, ${currentY * STRENGTH}px)`;
+    requestAnimationFrame(animate);
+  })();
+}
+
+// ===== HERO CANVAS PARTICLES =====
+function initHeroCanvas() {
+  const canvas = document.getElementById("heroParticles");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  const hero = document.getElementById("quienes-somos");
+
+  // Ajustar tamaño del canvas al hero
+  const resize = () => {
+    canvas.width = hero.offsetWidth;
+    canvas.height = hero.offsetHeight;
+  };
+  resize();
+  window.addEventListener("resize", resize, { passive: true });
+
+  // Crear partículas
+  const N = 55;
+  const particles = Array.from({ length: N }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.5 + 0.5,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.3,
+    alpha: Math.random() * 0.4 + 0.1,
+  }));
+
+  // Posición del mouse para conectar líneas
+  let mx = -9999, my = -9999;
+  hero.addEventListener("mousemove", (e) => {
+    const r = hero.getBoundingClientRect();
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
+  });
+  hero.addEventListener("mouseleave", () => { mx = -9999; my = -9999; });
+
+  const LINK_DIST = 120;
+  const MOUSE_DIST = 150;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Actualizar y dibujar partículas
+    particles.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Rebote en bordes
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+      // Dibujar punto
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(98, 191, 221, ${p.alpha})`;
+      ctx.fill();
     });
-    container.appendChild(dot);
+
+    // Líneas entre partículas cercanas
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < LINK_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(98, 191, 221, ${0.12 * (1 - d / LINK_DIST)})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+
+      // Líneas hacia el mouse
+      const dx = particles[i].x - mx;
+      const dy = particles[i].y - my;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < MOUSE_DIST) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(mx, my);
+        ctx.strokeStyle = `rgba(98, 191, 221, ${0.3 * (1 - d / MOUSE_DIST)})`;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
+    }
+
+    requestAnimationFrame(draw);
   }
 
-  if (!document.getElementById("particleStyles")) {
-    const style = document.createElement("style");
-    style.id = "particleStyles";
-    style.textContent = `
-      @keyframes floatParticle {
-        from { transform: translateY(0) scale(1); opacity: 0.6; }
-        to   { transform: translateY(-30px) scale(1.2); opacity: 0.15; }
-      }
-    `;
-    document.head.appendChild(style);
-  }
+  draw();
 }
 
 // ===== BACK TO TOP =====
