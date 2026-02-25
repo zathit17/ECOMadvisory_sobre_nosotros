@@ -346,38 +346,39 @@
   </main>
 
   <!-- ===== FOOTER ===== -->
-  <footer class="footer">
-    <div class="container footer__inner">
-      <div class="footer__brand">
-        <a href="/" class="nav__logo" aria-label="ECOM Advisory - Inicio">
-          <span class="logo__icon"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
-          <span class="logo__text">ECOM <strong>Advisory</strong></span>
-        </a>
-        <p>Especialistas en fiscalidad, stock y crecimiento para e-commerce y empresas con almacén.</p>
-      </div>
-      <div class="footer__links">
-        <h3>Navegación</h3>
-        <ul>
-          <li><a href="#quienes-somos">Quiénes somos</a></li>
-          <li><a href="#por-que-nosotros">Por qué nosotros</a></li>
-          <li><a href="#valores">Valores</a></li>
-          <li><a href="#equipo">Equipo</a></li>
-        </ul>
-      </div>
-      <div class="footer__social">
-        <h3>Síguenos</h3>
-        <div class="social__icons">
-          <a href="https://ecomadvisory.es" aria-label="Web principal" class="social__icon"><i class="fas fa-globe"
-              aria-hidden="true"></i></a>
-          <a href="#" aria-label="LinkedIn" class="social__icon"><i class="fab fa-linkedin-in"
-              aria-hidden="true"></i></a>
-          <a href="#" aria-label="Instagram" class="social__icon"><i class="fab fa-instagram"
-              aria-hidden="true"></i></a>
-        </div>
-      </div>
+  <footer class="footer" id="footer-main">
+
+    <!-- Fondo con blobs reactivos al mouse -->
+    <div class="footer__bg" aria-hidden="true" id="footerBg">
+      <div class="footer__blob footer__blob--1"></div>
+      <div class="footer__blob footer__blob--2"></div>
+      <div class="footer__blob footer__blob--3"></div>
     </div>
-    <div class="footer__bottom">
-      <p>&copy; 2026 ECOM Advisory. Todos los derechos reservados.</p>
+
+    <div class="container footer__inner">
+
+      <!-- Logo -->
+      <a href="https://ecomadvisory.es/" class="footer__logo" aria-label="ECOM Advisory — Inicio">
+        <img src="assets/images/logo blanco.svg" alt="ECOM Advisory" class="footer__logo-img" height="48" />
+      </a>
+
+      <!-- Tagline -->
+      <p class="footer__tagline">
+        ECOM Advisory · Asesoría y consultoría especializada en e-commerce con stock
+      </p>
+
+      <!-- Navegación legal -->
+      <nav class="footer__nav" aria-label="Pie de página">
+        <a href="https://ecomadvisory.es/aviso-legal" class="footer__nav-link">Aviso legal</a>
+        <span class="footer__nav-sep" aria-hidden="true">·</span>
+        <a href="https://ecomadvisory.es/politica-de-privacidad" class="footer__nav-link">Política de privacidad</a>
+        <span class="footer__nav-sep" aria-hidden="true">·</span>
+        <a href="https://ecomadvisory.es/#contacto" class="footer__nav-link">Contacto</a>
+      </nav>
+
+      <!-- Copyright -->
+      <p class="footer__copy">&copy; 2026 Ecom Advisory. Todos los derechos reservados.</p>
+
     </div>
   </footer>
 
